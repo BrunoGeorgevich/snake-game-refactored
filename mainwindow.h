@@ -1,19 +1,16 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QGraphicsScene>
+#include <QGraphicsView>
 #include <QMainWindow>
-
-class QGraphicsScene;
-class QGraphicsView;
-
-class GameController;
+#include <QKeyEvent>
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
     MainWindow(QWidget *parent = 0);
-    ~MainWindow();
 
 private slots:
     void adjustViewSize();
@@ -22,10 +19,11 @@ private:
     void initScene();
     void initSceneBackground();
 
+    void keyPressEvent(QKeyEvent *e);
+
     QGraphicsScene *scene;
     QGraphicsView *view;
-
-    GameController *game;
+    QTimer *timer;
 };
 
 #endif // MAINWINDOW_H

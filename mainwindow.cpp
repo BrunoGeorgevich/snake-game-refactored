@@ -2,14 +2,15 @@
 #include <QTimer>
 
 #include "constants.h"
-#include "gamecontroller.h"
 #include "mainwindow.h"
+#include "snake.h"
+#include "food.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       scene(new QGraphicsScene(this)),
       view(new QGraphicsView(scene, this)),
-      game(new GameController(*scene, this))
+      timer(new QTimer())
 {
     setCentralWidget(view);
     resize(600, 600);
@@ -17,12 +18,13 @@ MainWindow::MainWindow(QWidget *parent)
     initScene();
     initSceneBackground();
 
-    QTimer::singleShot(0, this, SLOT(adjustViewSize()));
-}
+    scene->addItem(Food::getInstance());
+    scene->addItem(Snake::getInstance());
 
-MainWindow::~MainWindow()
-{
-    
+    QTimer::singleShot(0, this, SLOT(adjustViewSize()));
+
+    connect(timer, SIGNAL(timeout()), scene, SLOT(advance()));
+    timer->start( 1000/33 );
 }
 
 void MainWindow::adjustViewSize()
@@ -43,4 +45,10 @@ void MainWindow::initSceneBackground()
     p.drawRect(0, 0, TILE_SIZE, TILE_SIZE);
 
     view->setBackgroundBrush(QBrush(bg));
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *e)
+{
+    if (e->type() == QEvent::KeyPress)
+        Snake::getInstance()->notifyObservers(e);
 }

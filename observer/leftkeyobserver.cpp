@@ -8,7 +8,7 @@ LeftKeyObserver::LeftKeyObserver()
 
 void LeftKeyObserver::notify(QKeyEvent *e)
 {
-    if(e->key() == Qt::Key_Left)
+    if(e->key() == Qt::Key_A)
         Snake::getInstance()->moveLeft();
 }
 

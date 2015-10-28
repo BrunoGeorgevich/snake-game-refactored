@@ -8,7 +8,7 @@ RightKeyObserver::RightKeyObserver()
 
 void RightKeyObserver::notify(QKeyEvent *e)
 {
-    if(e->key() == Qt::Key_Right)
+    if(e->key() == Qt::Key_D)
         Snake::getInstance()->moveRight();
 }
 

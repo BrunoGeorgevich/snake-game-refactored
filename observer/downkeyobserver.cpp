@@ -8,7 +8,7 @@ DownKeyObserver::DownKeyObserver()
 
 void DownKeyObserver::notify(QKeyEvent *e)
 {
-    if(e->key() == Qt::Key_Down) {
+    if(e->key() == Qt::Key_S) {
         Snake::getInstance()->moveDown();
     }
 }

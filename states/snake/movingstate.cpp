@@ -1,12 +1,6 @@
 #include "movingstate.h"
 
-MovingState::MovingState()
-{
+MovingState::MovingState(){}
 
-}
-
-void MovingState::run()
-{
-    //qDebug() << "SNAKE IS MOVING!";
-}
+void MovingState::run(){}
 

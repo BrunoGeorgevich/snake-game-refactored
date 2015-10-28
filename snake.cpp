@@ -1,7 +1,6 @@
 #include <QPainter>
 
 #include "constants.h"
-#include "gamecontroller.h"
 #include "snake.h"
 
 static const qreal SNAKE_SIZE = 10;
@@ -76,6 +75,7 @@ void Snake::addToTheScene()
     head.setX(0);
     head.setY(0);
     _scene->addItem(this);
+    lastKey = 0;
 
     installState(new MovingState());
 }
@@ -198,11 +198,9 @@ void Snake::handleCollisions()
     QList<QGraphicsItem *> collisions = collidingItems();
 
     // Check collisions with other objects on screen
-    foreach (QGraphicsItem *collidingItem, collisions) {
-        if (collidingItem->data(GD_Type) == GO_Food) {
+    foreach (QGraphicsItem *collidingItem, collisions)
+        if (collidingItem->data(GD_Type) == GO_Food)
             installState(new EatingState());
-        }
-    }
 
     if (tail.contains(head)) {
         Snake::getInstance()->installState(new HittingSomethingState());

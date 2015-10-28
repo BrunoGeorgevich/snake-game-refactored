@@ -15,7 +15,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     food.cpp \
-    gamecontroller.cpp \
     snake.cpp \
     wall.cpp \
     states/food/eatedstate.cpp \
@@ -30,7 +29,6 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     food.h \
-    gamecontroller.h \
     constants.h \
     snake.h \
     wall.h \

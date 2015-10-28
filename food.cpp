@@ -24,7 +24,6 @@ void Food::addToTheScene()
 
     setPosition(x,y);
     _scene->addItem(this);
-    qDebug() << "ashudhuasd";
 }
 
 void Food::removeFromTheScene()

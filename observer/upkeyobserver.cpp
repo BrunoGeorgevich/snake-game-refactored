@@ -5,7 +5,7 @@ UpKeyObserver::UpKeyObserver(){}
 
 void UpKeyObserver::notify(QKeyEvent *e)
 {
-    if(e->key() == Qt::Key_Up)
+    if(e->key() == Qt::Key_W)
         Snake::getInstance()->moveUp();
 }
 
