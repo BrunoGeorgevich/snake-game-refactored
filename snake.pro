@@ -17,11 +17,24 @@ SOURCES += main.cpp\
     food.cpp \
     gamecontroller.cpp \
     snake.cpp \
-    wall.cpp
+    wall.cpp \
+    states/food/eatedstate.cpp \
+    states/snake/movingstate.cpp \
+    states/snake/eatingstate.cpp \
+    states/food/foodwaitingstate.cpp \
+    states/snake/hittingsomethingstate.cpp
 
 HEADERS  += mainwindow.h \
     food.h \
     gamecontroller.h \
     constants.h \
     snake.h \
-    wall.h
+    wall.h \
+    states/state.h\
+    observer/observer.h \
+    element.h \
+    states/food/eatedstate.h \
+    states/snake/movingstate.h \
+    states/snake/eatingstate.h \
+    states/food/foodwaitingstate.h \
+    states/snake/hittingsomethingstate.h

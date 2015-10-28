@@ -1,9 +1,12 @@
 #ifndef FOOD_H
 #define FOOD_H
 
-#include <QGraphicsItem>
+#include "element.h"
 
-class Food : public QGraphicsItem
+#include "states/food/foodwaitingstate.h"
+#include "states/food/eatedstate.h"
+
+class Food : public Element
 {
 public:
 
@@ -13,6 +16,10 @@ public:
     }
 
     void setPosition(qreal x, qreal y);
+    void addToTheScene();
+    void removeFromTheScene();
+
+    void advance(int phase);
 
 private:
     static Food *food;
@@ -22,6 +29,7 @@ private:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 
     QPainterPath shape() const;
+    QGraphicsScene *_scene;
 };
 
 #endif // FOOD_H

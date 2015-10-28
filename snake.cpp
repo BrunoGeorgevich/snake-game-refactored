@@ -13,6 +13,7 @@ Snake::Snake() :
     speed(3),
     moveDirection(NoMove)
 {
+    state = new MovingState();
 }
 
 QRectF Snake::boundingRect() const
@@ -67,11 +68,31 @@ void Snake::setMoveDirection(Direction direction)
     moveDirection = direction;
 }
 
-void Snake::advance(int step)
+void Snake::addToTheScene()
 {
-    if (!step) {
+    setMoveDirection(NoMove);
+    tail.clear();
+    growing = 7;
+    speed = 3;
+    setPos(0,0);
+    head.setX(0);
+    head.setY(0);
+    _scene->addItem(this);
+
+    installState(new MovingState());
+}
+
+void Snake::removeFromTheScene()
+{
+    if(!_scene) _scene = scene();
+    _scene->removeItem(this);
+    addToTheScene();
+}
+
+void Snake::run(int step) {
+    if(!step)
         return;
-    }
+
     if (tickCounter++ % speed != 0) {
         return;
     }
@@ -80,7 +101,7 @@ void Snake::advance(int step)
     }
 
     if (growing > 0) {
-		QPointF tailPoint = head;
+        QPointF tailPoint = head;
         tail << tailPoint;
         growing -= 1;
     } else {
@@ -89,21 +110,33 @@ void Snake::advance(int step)
     }
 
     switch (moveDirection) {
-        case MoveLeft:
-            moveLeft();
-            break;
-        case MoveRight:
-            moveRight();
-            break;
-        case MoveUp:
-            moveUp();
-            break;
-        case MoveDown:
-            moveDown();
-            break;
+    case MoveLeft:
+        moveLeft();
+        break;
+    case MoveRight:
+        moveRight();
+        break;
+    case MoveUp:
+        moveUp();
+        break;
+    case MoveDown:
+        moveDown();
+        break;
     }
 
     setPos(head);
+
+}
+
+void Snake::increaseGrowing()
+{
+    growing += 1;
+}
+
+void Snake::advance(int step)
+{
+    run(step);
+    state->run();
     handleCollisions();
 }
 
@@ -111,7 +144,7 @@ void Snake::moveLeft()
 {
     head.rx() -= SNAKE_SIZE;
     if (head.rx() < -100) {
-        head.rx() = 100;
+        installState(new HittingSomethingState());
     }
 }
 
@@ -119,7 +152,7 @@ void Snake::moveRight()
 {
     head.rx() += SNAKE_SIZE;
     if (head.rx() > 100) {
-        head.rx() = -100;
+        installState(new HittingSomethingState());
     }
 }
 
@@ -127,7 +160,7 @@ void Snake::moveUp()
 {
     head.ry() -= SNAKE_SIZE;
     if (head.ry() < -100) {
-        head.ry() = 100;
+        installState(new HittingSomethingState());
     }
 }
 
@@ -135,7 +168,7 @@ void Snake::moveDown()
 {
     head.ry() += SNAKE_SIZE;
     if (head.ry() > 100) {
-        head.ry() = -100;
+        installState(new HittingSomethingState());
     }
 }
 
@@ -146,14 +179,12 @@ void Snake::handleCollisions()
     // Check collisions with other objects on screen
     foreach (QGraphicsItem *collidingItem, collisions) {
         if (collidingItem->data(GD_Type) == GO_Food) {
-            // Let GameController handle the event by putting another apple
-            //controller.snakeAteFood(this, (Food *)collidingItem);
-            growing += 1;
+            installState(new EatingState());
         }
     }
 
     // Check snake eating itself
     if (tail.contains(head)) {
-        //controller.snakeAteItself(this);
+        installState(new HittingSomethingState());
     }
 }
