@@ -36,8 +36,6 @@ private:
 
     QTimer timer;
     QGraphicsScene &scene;
-
-    Snake *snake;
 };
 
 #endif // GAMECONTROLLER_H

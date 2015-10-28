@@ -17,15 +17,19 @@ public:
         MoveDown
     };
 
-    Snake(GameController & controller);
-
-    QRectF boundingRect() const;
     QPainterPath shape() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-
     void setMoveDirection(Direction direction);
 
-protected:
+    static Snake *getInstance() {
+        if(!snake) snake = new Snake();
+        return snake;
+    }
+
+private:
+    static Snake *snake;
+    Snake();
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void advance(int step);
 
 private:
@@ -42,7 +46,6 @@ private:
     QList<QPointF> tail;
     int            tickCounter;
     Direction      moveDirection;
-    GameController &controller;
 };
 
 #endif // SNAKE_H

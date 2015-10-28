@@ -5,13 +5,13 @@
 #include "snake.h"
 
 static const qreal SNAKE_SIZE = 10;
+Snake *Snake::snake = new Snake();
 
-Snake::Snake(GameController &controller) :
+Snake::Snake() :
     head(0, 0),
     growing(7),
     speed(3),
-    moveDirection(NoMove),
-    controller(controller)
+    moveDirection(NoMove)
 {
 }
 
@@ -147,13 +147,13 @@ void Snake::handleCollisions()
     foreach (QGraphicsItem *collidingItem, collisions) {
         if (collidingItem->data(GD_Type) == GO_Food) {
             // Let GameController handle the event by putting another apple
-            controller.snakeAteFood(this, (Food *)collidingItem);
+            //controller.snakeAteFood(this, (Food *)collidingItem);
             growing += 1;
         }
     }
 
     // Check snake eating itself
     if (tail.contains(head)) {
-        controller.snakeAteItself(this);
+        //controller.snakeAteItself(this);
     }
 }

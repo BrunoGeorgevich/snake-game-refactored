@@ -8,13 +8,12 @@
 
 GameController::GameController(QGraphicsScene &scene, QObject *parent) :
     QObject(parent),
-    scene(scene),
-    snake(new Snake(*this))
+    scene(scene)
 {
     timer.start( 1000/33 );
     scene.addItem(Food::getInstance());
 
-    scene.addItem(snake);
+    scene.addItem(Snake::getInstance());
     scene.installEventFilter(this);
 
     resume();
@@ -45,16 +44,16 @@ void GameController::handleKeyPressed(QKeyEvent *event)
 {
     switch (event->key()) {
         case Qt::Key_Left:
-            snake->setMoveDirection(Snake::MoveLeft);
+            Snake::getInstance()->setMoveDirection(Snake::MoveLeft);
             break;
         case Qt::Key_Right:
-            snake->setMoveDirection(Snake::MoveRight);
+            Snake::getInstance()->setMoveDirection(Snake::MoveRight);
             break;
         case Qt::Key_Up:
-            snake->setMoveDirection(Snake::MoveUp);
+            Snake::getInstance()->setMoveDirection(Snake::MoveUp);
             break;
         case Qt::Key_Down:
-            snake->setMoveDirection(Snake::MoveDown);
+            Snake::getInstance()->setMoveDirection(Snake::MoveDown);
             break;
     }
 }
@@ -69,7 +68,7 @@ void GameController::addNewFood()
 
         x *= 10;
         y *= 10;
-    } while (snake->shape().contains(snake->mapFromScene(QPointF(x + 5, y + 5))));
+    } while (Snake::getInstance()->shape().contains(Snake::getInstance()->mapFromScene(QPointF(x + 5, y + 5))));
 
     scene.addItem(Food::getInstance());
 }
@@ -77,9 +76,7 @@ void GameController::addNewFood()
 void GameController::gameOver()
 {
     scene.clear();
-
-    snake = new Snake(*this);
-    scene.addItem(snake);
+    scene.addItem(Snake::getInstance());
     addNewFood();
 }
 
