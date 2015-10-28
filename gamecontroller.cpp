@@ -40,24 +40,6 @@ void GameController::snakeAteItself(Snake *snake)
     QTimer::singleShot(0, this, SLOT(gameOver()));
 }
 
-void GameController::handleKeyPressed(QKeyEvent *event)
-{
-    switch (event->key()) {
-        case Qt::Key_Left:
-            Snake::getInstance()->setMoveDirection(Snake::MoveLeft);
-            break;
-        case Qt::Key_Right:
-            Snake::getInstance()->setMoveDirection(Snake::MoveRight);
-            break;
-        case Qt::Key_Up:
-            Snake::getInstance()->setMoveDirection(Snake::MoveUp);
-            break;
-        case Qt::Key_Down:
-            Snake::getInstance()->setMoveDirection(Snake::MoveDown);
-            break;
-    }
-}
-
 void GameController::addNewFood()
 {
     int x, y;
@@ -95,7 +77,7 @@ void GameController::resume()
 bool GameController::eventFilter(QObject *object, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress) {
-        handleKeyPressed((QKeyEvent *)event);
+        Snake::getInstance()->notifyObservers((QKeyEvent *)event);
         return true;
     } else {
         return QObject::eventFilter(object, event);

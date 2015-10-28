@@ -22,7 +22,11 @@ SOURCES += main.cpp\
     states/snake/movingstate.cpp \
     states/snake/eatingstate.cpp \
     states/food/foodwaitingstate.cpp \
-    states/snake/hittingsomethingstate.cpp
+    states/snake/hittingsomethingstate.cpp \
+    observer/leftkeyobserver.cpp \
+    observer/rightkeyobserver.cpp \
+    observer/downkeyobserver.cpp \
+    observer/upkeyobserver.cpp
 
 HEADERS  += mainwindow.h \
     food.h \
@@ -37,4 +41,8 @@ HEADERS  += mainwindow.h \
     states/snake/movingstate.h \
     states/snake/eatingstate.h \
     states/food/foodwaitingstate.h \
-    states/snake/hittingsomethingstate.h
+    states/snake/hittingsomethingstate.h \
+    observer/leftkeyobserver.h \
+    observer/rightkeyobserver.h \
+    observer/downkeyobserver.h \
+    observer/upkeyobserver.h

@@ -1,10 +1,12 @@
 #ifndef OBSERVER_H
 #define OBSERVER_H
 
+#include <QKeyEvent>
+
 class Observer
 {
 public:
-    void run();
+    virtual void notify(QKeyEvent *e) = 0;
 };
 
 #endif // OBSERVER_H

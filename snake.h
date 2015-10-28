@@ -2,23 +2,21 @@
 #define SNAKE_H
 
 #include "element.h"
+
 #include "states/snake/movingstate.h"
 #include "states/snake/eatingstate.h"
 #include "states/snake/hittingsomethingstate.h"
 
+#include "observer/downkeyobserver.h"
+#include "observer/upkeyobserver.h"
+#include "observer/leftkeyobserver.h"
+#include "observer/rightkeyobserver.h"
+
 class Snake : public Element
 {
 public:
-    enum Direction {
-        NoMove,
-        MoveLeft,
-        MoveRight,
-        MoveUp,
-        MoveDown
-    };
 
     QPainterPath shape() const;
-    void setMoveDirection(Direction direction);
 
     void addToTheScene();
     void removeFromTheScene();
@@ -30,6 +28,18 @@ public:
     }
 
     void increaseGrowing();
+    QPointF getHead();
+
+    //Observer Design Pattern Methods
+    void notifyObservers(QKeyEvent *e);
+    void installObserver(Observer *o);
+    void uninstallObserver(Observer *o);
+    void uninstallObserver(int index);
+
+    void moveLeft();
+    void moveRight();
+    void moveUp();
+    void moveDown();
 
 private:
     static Snake *snake;
@@ -38,20 +48,17 @@ private:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void advance(int step);
 
-private:
-    void moveLeft();
-    void moveRight();
-    void moveUp();
-    void moveDown();
-
     void handleCollisions();
+    void move();
+
+    QList<Observer *> observers;
+    QKeyEvent *lastKey;
 
     QPointF        head;
     int            growing;
     int            speed;
     QList<QPointF> tail;
     int            tickCounter;
-    Direction      moveDirection;
 };
 
 #endif // SNAKE_H

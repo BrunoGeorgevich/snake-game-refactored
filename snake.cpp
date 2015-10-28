@@ -10,10 +10,14 @@ Snake *Snake::snake = new Snake();
 Snake::Snake() :
     head(0, 0),
     growing(7),
-    speed(3),
-    moveDirection(NoMove)
+    speed(3)
 {
     state = new MovingState();
+
+    installObserver(new DownKeyObserver());
+    installObserver(new UpKeyObserver());
+    installObserver(new LeftKeyObserver());
+    installObserver(new RightKeyObserver());
 }
 
 QRectF Snake::boundingRect() const
@@ -63,14 +67,8 @@ void Snake::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *
     painter->restore();
 }
 
-void Snake::setMoveDirection(Direction direction)
-{
-    moveDirection = direction;
-}
-
 void Snake::addToTheScene()
 {
-    setMoveDirection(NoMove);
     tail.clear();
     growing = 7;
     speed = 3;
@@ -92,45 +90,33 @@ void Snake::removeFromTheScene()
 void Snake::run(int step) {
     if(!step)
         return;
-
     if (tickCounter++ % speed != 0) {
         return;
     }
-    if (moveDirection == NoMove) {
-        return;
-    }
-
-    if (growing > 0) {
-        QPointF tailPoint = head;
-        tail << tailPoint;
-        growing -= 1;
-    } else {
-        tail.takeFirst();
-        tail << head;
-    }
-
-    switch (moveDirection) {
-    case MoveLeft:
-        moveLeft();
-        break;
-    case MoveRight:
-        moveRight();
-        break;
-    case MoveUp:
-        moveUp();
-        break;
-    case MoveDown:
-        moveDown();
-        break;
-    }
-
+    if(lastKey)
+        notifyObservers(lastKey);
     setPos(head);
-
 }
 
 void Snake::increaseGrowing()
 {
     growing += 1;
+}
+
+QPointF Snake::getHead()
+{
+    return head;
+}
+
+void Snake::notifyObservers(QKeyEvent *e)
+{
+    if(lastKey != e && e->key() != 0) {
+        lastKey = new QKeyEvent(*e);
+    }
+
+    foreach (Observer *o, observers) {
+        o->notify(lastKey);
+    }
 }
 
 void Snake::advance(int step)
@@ -140,36 +126,71 @@ void Snake::advance(int step)
     handleCollisions();
 }
 
+void Snake::installObserver(Observer *o)
+{
+    observers.append(o);
+}
+
+void Snake::uninstallObserver(Observer *o)
+{
+    observers.removeAll(o);
+}
+
+void Snake::uninstallObserver(int index)
+{
+    observers.removeAt(index);
+}
+
+void Snake::move()
+{
+    if (growing > 0) {
+        QPointF tailPoint = head;
+        tail << tailPoint;
+        growing -= 1;
+    } else {
+        tail.takeFirst();
+        tail << head;
+    }
+}
+
 void Snake::moveLeft()
 {
+    move();
     head.rx() -= SNAKE_SIZE;
     if (head.rx() < -100) {
         installState(new HittingSomethingState());
     }
+    setPos(head);
 }
 
 void Snake::moveRight()
 {
+    move();
     head.rx() += SNAKE_SIZE;
     if (head.rx() > 100) {
         installState(new HittingSomethingState());
     }
+    setPos(head);
 }
 
 void Snake::moveUp()
 {
+    move();
     head.ry() -= SNAKE_SIZE;
     if (head.ry() < -100) {
         installState(new HittingSomethingState());
     }
+    setPos(head);
 }
 
 void Snake::moveDown()
 {
+    move();
     head.ry() += SNAKE_SIZE;
     if (head.ry() > 100) {
         installState(new HittingSomethingState());
     }
+    setPos(head);
 }
 
 void Snake::handleCollisions()
@@ -183,8 +204,7 @@ void Snake::handleCollisions()
         }
     }
 
-    // Check snake eating itself
     if (tail.contains(head)) {
-        installState(new HittingSomethingState());
+        Snake::getInstance()->installState(new HittingSomethingState());
     }
 }

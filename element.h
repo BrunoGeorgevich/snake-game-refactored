@@ -15,16 +15,11 @@ public:
     virtual void addToTheScene() = 0;
     virtual void removeFromTheScene() = 0;
 
-    void installObserver(Observer *ob) {
-        observer = ob;
-    }
-
     void installState(State *st) {
         state = st;
     }
 
 protected:
-    Observer *observer;
     State *state;
     QGraphicsScene *_scene;
 };

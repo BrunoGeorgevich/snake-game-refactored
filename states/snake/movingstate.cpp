@@ -7,6 +7,6 @@ MovingState::MovingState()
 
 void MovingState::run()
 {
-    qDebug() << "SNAKE IS MOVING!";
+    //qDebug() << "SNAKE IS MOVING!";
 }
 
